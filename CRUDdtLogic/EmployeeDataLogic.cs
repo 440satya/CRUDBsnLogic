@@ -60,5 +60,58 @@ namespace CRUDdtLogic
 
             return data;
         }
+
+
+
+        //FilterCode
+
+        public static List<EmployeeDetails> GetFilteredEmployeeDetails(string name, string gender, string city, string addressType)
+        {
+            List<EmployeeDetails> data = new List<EmployeeDetails>();
+
+            try
+            {
+                using (SqlConnection connection = new SqlConnection(ConnectionString))
+                {
+                    connection.Open();
+
+                    using (SqlCommand command = new SqlCommand("GetEmployeeDetailsFiltered", connection))
+                    {
+                        command.CommandType = CommandType.StoredProcedure;
+                        command.Parameters.AddWithValue("@Name", string.IsNullOrEmpty(name) ? DBNull.Value : (object)name);
+                        command.Parameters.AddWithValue("@Gender", string.IsNullOrEmpty(gender) ? DBNull.Value : (object)gender);
+                        command.Parameters.AddWithValue("@City", string.IsNullOrEmpty(city) ? DBNull.Value : (object)city);
+                        command.Parameters.AddWithValue("@AddressType", string.IsNullOrEmpty(addressType) ? DBNull.Value : (object)addressType);
+
+                        using (SqlDataReader reader = command.ExecuteReader())
+                        {
+                            while (reader.Read())
+                            {
+                                EmployeeDetails employeeDetails = new EmployeeDetails
+                                {
+                                    EmployeeId = Convert.ToInt32(reader["EmployeeId"]),
+                                    Name = reader["Name"].ToString(),
+                                    Gender = reader["Gender"].ToString(),
+                                    Salary = Convert.ToDecimal(reader["Salary"]),
+                                    DoorNumber = reader["DoorNumber"].ToString(),
+                                    City = reader["City"].ToString(),
+                                    PhoneNumber = reader["PhoneNumber"].ToString(),
+                                    AddressType = reader["AddressType"].ToString()
+                                };
+
+                                data.Add(employeeDetails);
+                            }
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Error: " + ex.Message);
+            }
+
+            return data;
+        }
+
     }
 }

@@ -42,6 +42,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="EmployeeDataLogic.cs" />
+    <Compile Include="Model\EmployeeDetails.cs" />
     <Compile Include="Model\EmployeeDt.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
